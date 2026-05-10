@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bank Management System</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div id="app" class="app">
+    <div class="bg-orb bg-orb--1"></div>
+    <div class="bg-orb bg-orb--2"></div>
+    <div class="bg-orb bg-orb--3"></div>
+
+    <!-- Toasts -->
+    <div id="toasts" class="toasts" aria-live="polite" aria-atomic="true"></div>
+
+    <!-- Top bar -->
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">🏦</div>
+        <div>
+          <div class="brand__name">Bank Management</div>
+          <div class="brand__tag">Frontend-only demo · Animated UI</div>
+        </div>
+      </div>
+
+      <nav class="topnav" aria-label="Primary">
+        <button class="navbtn" data-nav="dashboard" aria-current="page">
+          Dashboard
+        </button>
+        <button class="navbtn" data-nav="accounts">Accounts</button>
+        <button class="navbtn" data-nav="transactions">Transactions</button>
+        <button class="navbtn" data-nav="transfer">Transfer</button>
+      </nav>
+
+      <div class="user">
+        <div class="user__avatar" aria-hidden="true">🙂</div>
+        <div class="user__meta">
+          <div class="user__name">Demo User</div>
+          <div class="user__role">Operations</div>
+        </div>
+      </div>
+    </header>
+
+    <main class="main">
+      <!-- Login / Landing -->
+      <section id="screen-dashboard" class="screen" data-screen="dashboard">
+        <div class="grid hero">
+          <div class="hero__card">
+            <div class="hero__kicker">Welcome back</div>
+            <h1 class="hero__title">Manage accounts, payments & transfers</h1>
+            <p class="hero__sub">All data is mocked in-memory. Refreshing the page resets everything.</p>
+
+            <div class="hero__actions">
+              <button class="primary" data-action="openCreateAccount">Create account</button>
+              <button class="secondary" data-action="openQuickDeposit">Quick deposit</button>
+            </div>
+
+            <div class="hero__stats">
+              <div class="stat card-anim">
+                <div class="stat__label">Total balance</div>
+                <div id="statTotalBalance" class="stat__value">—</div>
+                <div class="stat__hint">Across all accounts</div>
+              </div>
+              <div class="stat card-anim">
+                <div class="stat__label">Accounts</div>
+                <div id="statAccounts" class="stat__value">—</div>
+                <div class="stat__hint">Active customer accounts</div>
+              </div>
+              <div class="stat card-anim">
+                <div class="stat__label">Today’s txns</div>
+                <div id="statTxToday" class="stat__value">—</div>
+                <div class="stat__hint">Mock activity feed</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero__side">
+            <div class="panel card-anim">
+              <div class="panel__header">
+                <div>
+                  <div class="panel__title">Activity feed</div>
+                  <div class="panel__sub">Most recent transactions</div>
+                </div>
+                <button class="ghost" data-action="jumpTransactions">View all</button>
+              </div>
+              <div id="activityList" class="activity"></div>
+            </div>
+
+            <div class="panel card-anim panel--soft">
+              <div class="panel__header">
+                <div>
+                  <div class="panel__title">Operational controls</div>
+                  <div class="panel__sub">Mock operations</div>
+                </div>
+              </div>
+              <div class="opGrid">
+                <button class="opbtn" data-action="openDepositWithdraw">
+                  <span class="opbtn__icon" aria-hidden="true">💳</span>
+                  <span>Add deposit / withdrawal</span>
+                </button>
+                <button class="opbtn" data-action="openTransfer">
+                  <span class="opbtn__icon" aria-hidden="true">🔁</span>
+                  <span>Transfer between accounts</span>
+                </button>
+                <button class="opbtn" data-action="resetData">
+                  <span class="opbtn__icon" aria-hidden="true">♻️</span>
+                  <span>Reset mock data</span>
+                </button>
+                <button class="opbtn" data-action="toggleReduceMotion">
+                  <span class="opbtn__icon" aria-hidden="true">🎛️</span>
+                  <span>Reduce motion</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Accounts -->
+      <section id="screen-accounts" class="screen hidden" data-screen="accounts">
+        <div class="pageHeader">
+          <div>
+            <div class="pageHeader__kicker">Accounts</div>
+            <h2 class="pageHeader__title">Customer balances</h2>
+          </div>
+          <div class="pageHeader__actions">
+            <button class="primary" data-action="openCreateAccount">New account</button>
+          </div>
+        </div>
+
+        <div class="cards" id="accountsGrid"></div>
+      </section>
+
+      <!-- Transactions -->
+      <section id="screen-transactions" class="screen hidden" data-screen="transactions">
+        <div class="pageHeader">
+          <div>
+            <div class="pageHeader__kicker">Transactions</div>
+            <h2 class="pageHeader__title">History & filters</h2>
+          </div>
+          <div class="filters">
+            <label class="field">
+              <span>Search</span>
+              <input id="txSearch" type="text" placeholder="e.g. transfer, deposit, #TX..." />
+            </label>
+            <label class="field">
+              <span>Type</span>
+              <select id="txType">
+                <option value="all">All</option>
+                <option value="deposit">Deposit</option>
+                <option value="withdrawal">Withdrawal</option>
+                <option value="transfer">Transfer</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>Sort</span>
+              <select id="txSort">
+                <option value="newest">Newest</option>
+                <option value="oldest">Oldest</option>
+                <option value="amount_desc">Amount (high)</option>
+                <option value="amount_asc">Amount (low)</option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+        <div class="tableWrap">
+          <table class="table" role="table" aria-label="Transactions table">
+            <thead>
+              <tr>
+                <th>TX</th>
+                <th>Type</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Amount</th>
+                <th>When</th>
+              </tr>
+            </thead>
+            <tbody id="txTbody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Transfer -->
+      <section id="screen-transfer" class="screen hidden" data-screen="transfer">
+        <div class="pageHeader">
+          <div>
+            <div class="pageHeader__kicker">Transfer</div>
+            <h2 class="pageHeader__title">Move funds between accounts</h2>
+          </div>
+          <div class="pageHeader__actions">
+            <button class="ghost" data-action="openDepositWithdraw">Deposit/Withdraw</button>
+          </div>
+        </div>
+
+        <div class="formGrid">
+          <div class="formCard">
+            <div class="formCard__title">Create transfer</div>
+
+            <label class="field">
+              <span>From account</span>
+              <select id="fromAccount"></select>
+            </label>
+
+            <label class="field">
+              <span>To account</span>
+              <select id="toAccount"></select>
+            </label>
+
+            <div class="twoCols">
+              <label class="field">
+                <span>Amount</span>
+                <input id="transferAmount" type="number" min="1" step="1" placeholder="e.g. 250" />
+              </label>
+              <label class="field">
+                <span>Note</span>
+                <input id="transferNote" type="text" placeholder="optional" />
+              </label>
+            </div>
+
+            <button class="primary" data-action="submitTransfer">Submit transfer</button>
+            <div id="transferError" class="formError" role="alert" hidden></div>
+          </div>
+
+          <div class="formCard formCard--soft">
+            <div class="formCard__title">Transfer preview</div>
+            <div class="preview">
+              <div class="previewRow">
+                <span class="muted">From</span>
+                <span id="previewFrom" class="mono">—</span>
+              </div>
+              <div class="previewRow">
+                <span class="muted">To</span>
+                <span id="previewTo" class="mono">—</span>
+              </div>
+              <div class="previewRow">
+                <span class="muted">Amount</span>
+                <span id="previewAmount" class="mono">—</span>
+              </div>
+              <div class="previewRow">
+                <span class="muted">Fee</span>
+                <span class="mono">0</span>
+              </div>
+              <div class="previewHint">Transfer will add two ledger entries (debit & credit) and update balances instantly.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Modals -->
+    <div class="modalOverlay hidden" id="modalOverlay" aria-hidden="true">
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal__header">
+          <div>
+            <div id="modalTitle" class="modal__title">Modal</div>
+            <div id="modalSubtitle" class="modal__subtitle">—</div>
+          </div>
+          <button class="iconBtn" data-action="closeModal" aria-label="Close">✕</button>
+        </div>
+
+        <div class="modal__body" id="modalBody"></div>
+
+        <div class="modal__footer" id="modalFooter"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>
+
